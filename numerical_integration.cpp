@@ -13,21 +13,24 @@ int N = 500;
 double f(double x) { return cos(x); }
 
 void simpsonRule() {
-  double result, st, dx, x1, x2, x;
-  result = 0;  st = 0;  dx = 0;  
-  x1 = 0;  x2 = 1; x = 0;
+  double x1,x2,result,t,dx,x;
+  x1 = 0; x2 = 1; 
+  result = 0; t = 0;
 
-  dx = (x2 - x1) / (double)N;
+  dx = (x2 - x1) / N;
+  pTimer zegar = newTimer(); // make new timer
+  startTimer(zegar); // store first timestamp
   for(int i = 1; i <= N; i++)
-  {
-    x = x1 + i * dx;
-    x1 = x - dx / 2;
-    st += f(x1);
-    if(i < N)
-        result += f(x1);
-  }
-  result = dx / 6 * (f(x1) + f(x2) + 2 * result + 4 * st);
-  cout << "Wynik calkowania metoda Simpsona: " << result << endl;
+    {
+      x = x1 + i * dx;
+      t += f(x - dx / 2);
+      if(i < N) result += f(x);
+    }
+  result = dx / 6 * (f(x1) + f(x2) + 2 * result + 4 * t);
+  stopTimer(zegar);  // store second timestamp
+  printTimer(zegar); // show time difference
+  freeTimer(zegar);  // free occupied ram
+  cout << endl << "Wynik calkowania metoda Simpsona: " << result << endl;
 }
 void rectangleRule() {
   double x1, x2, h, result;
@@ -36,8 +39,6 @@ void rectangleRule() {
   x2 = 1;
 
   h = (x2 - x1) / (double)N;
-
-  cout << "krok: h=" << h << endl;
 
   result = 0;
   pTimer zegar = newTimer(); // make new timer
@@ -57,8 +58,6 @@ void trapezoidalRule(){
   x2 = 1;
 
   h = (x2 - x1) / (double)N;
-
-  cout << "krok: h=" << h << endl;
 
   result = 0;
   pTimer zegar = newTimer(); // make new timer
