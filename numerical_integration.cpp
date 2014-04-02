@@ -13,19 +13,21 @@ int N = 500;
 double f(double x) { return cos(x); }
 
 void simpsonRule() {
-  double s=0, st=0, dx, x1, x2, x;
-  s = 0;  st = 0;  dx = 0;  
-  x1 = 0;  x2 = 0; x = 0;
+  double result, st, dx, x1, x2, x;
+  result = 0;  st = 0;  dx = 0;  
+  x1 = 0;  x2 = 1; x = 0;
 
-  dx = (x1 - x2) / N;
+  dx = (x2 - x1) / (double)N;
   for(int i = 1; i <= N; i++)
   {
     x = x1 + i * dx;
-    st += f(x - dx / 2);
-    if(i < N) s += f(x);
+    x1 = x - dx / 2;
+    st += f(x1);
+    if(i < N)
+        result += f(x1);
   }
-  s = dx / 6 * (f(x1) + f(x2) + 2 * s + 4 * st);
-  cout << "Wynik calkowania metoda Simpsona: " << s << endl;
+  result = dx / 6 * (f(x1) + f(x2) + 2 * result + 4 * st);
+  cout << "Wynik calkowania metoda Simpsona: " << result << endl;
 }
 void rectangleRule() {
   double x1, x2, h, result;
