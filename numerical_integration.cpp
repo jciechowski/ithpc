@@ -11,9 +11,6 @@ string FUN = "";
 string FILEPATH = "";
 int N = 500;
 
-
-// double f(double x) { return cos(x); }
-
 template<typename T>
 double f(T x){
   exprtk::symbol_table<T> symbol_table;
@@ -39,13 +36,15 @@ void simpsonRule() {
     {
       x = x1 + i * dx;
       t += f<double>(x - dx / 2);
-      if(i < N) result += f(x);
+      if(i < N) result += f<double>(x);
     }
   result = dx / 6 * (f<double>(x1) + f<double>(x2) + 2 * result + 4 * t);
   stopTimer(zegar);  
+  
+  cout << endl << "Wynik calkowania metoda Simpsona: " << result << endl << "czas: ";
   printTimer(zegar); 
+  cout << endl;
   freeTimer(zegar);  
-  cout << endl << "Wynik calkowania metoda Simpsona: " << result << endl;
 }
 void rectangleRule() {
   double x1, x2, h, result;
@@ -61,9 +60,10 @@ void rectangleRule() {
   for (int i = 1; i <= N; i++)
     result += f<double>(x1 + i*h)*h;
   stopTimer(zegar);  
+  cout << endl << "Wynik calkowania metoda prostokatow: " << result << endl << "czas: ";
   printTimer(zegar); 
-  freeTimer(zegar);  
-  cout << endl << "Wynik calkowania metoda prostokatow: " << result << endl;
+  cout << endl;
+  freeTimer(zegar); 
 }
 void trapezoidalRule(){
   double x1, x2, h, result;
@@ -82,9 +82,10 @@ void trapezoidalRule(){
   result += f<double>(x2) / 2;
   result *= h;
   stopTimer(zegar);  
+  cout << endl << "Wynik calkowania metoda trapezow: " << result << endl << "czas: ";
   printTimer(zegar); 
-  freeTimer(zegar);  
-  cout << endl << "Wynik calkowania metoda trapezow: " << result << endl;
+  cout << endl;
+  freeTimer(zegar); 
 }
 void readFile(){
   ifstream infile(FILEPATH.c_str());

@@ -13,6 +13,6 @@ numerical_integration.o: numerical_integration.cpp
 	$(CC) $(CFLAGS) $@
 
 run:	all
-	./numerical_integration -n 500
+	./numerical_integration -f input.dat
 clean: 
 	rm -rf *.o numerical_integration
