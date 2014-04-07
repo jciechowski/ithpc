@@ -9,7 +9,7 @@ using namespace std;
 
 string FUN = "";
 string FILEPATH = "";
-int N = 500;
+int N = 0;
 
 template<typename T>
 double f(T x){
@@ -25,20 +25,21 @@ double f(T x){
   return expression.value();
 }
 void simpsonRule() {
-  double x1,x2,result,t,dx,x;
+  double x1,x2,result,t,h,x;
   x1 = 0; x2 = 1; 
   result = 0; t = 0;
-
-  dx = (x2 - x1) / N;
   pTimer zegar = newTimer(); 
+
+  h = (x2 - x1) / N;
   startTimer(zegar); 
   for(int i = 1; i <= N; i++)
     {
-      x = x1 + i * dx;
-      t += f<double>(x - dx / 2);
-      if(i < N) result += f<double>(x);
+      x = x1 + i * h;
+      t += f<double>(x - h / 2);
+      if(i < N)
+        result += f<double>(x);
     }
-  result = dx / 6 * (f<double>(x1) + f<double>(x2) + 2 * result + 4 * t);
+  result = h / 6 * (f<double>(x1) + f<double>(x2) + 2 * result + 4 * t);
   stopTimer(zegar);  
   
   cout << endl << "Wynik calkowania metoda Simpsona: " << result << endl << "czas: ";
@@ -48,18 +49,15 @@ void simpsonRule() {
 }
 void rectangleRule() {
   double x1, x2, h, result;
-
-  x1 = 0;
-  x2 = 1;
-
-  h = (x2 - x1) / (double)N;
-
-  result = 0;
+  x1 = 0; x2 = 1; result = 0;
   pTimer zegar = newTimer(); 
+
+  h = (x2 - x1) / N;
   startTimer(zegar); 
   for (int i = 1; i <= N; i++)
-    result += f<double>(x1 + i*h)*h;
+    result += f<double>(x1 + i * h) * h;
   stopTimer(zegar);  
+
   cout << endl << "Wynik calkowania metoda prostokatow: " << result << endl << "czas: ";
   printTimer(zegar); 
   cout << endl;
@@ -67,21 +65,18 @@ void rectangleRule() {
 }
 void trapezoidalRule(){
   double x1, x2, h, result;
-
-  x1 = 0;
-  x2 = 1;
-
-  h = (x2 - x1) / (double)N;
-
-  result = 0;
+  x1 = 0; x2 = 1; result = 0;
   pTimer zegar = newTimer(); 
+
+  h = (x2 - x1) / N;
   startTimer(zegar); 
-  for (int i = 1; i<N; i++)
-      result += f<double>(x1 + i * h);
+  for (int i = 1; i < N; i++)
+    result += f<double>(x1 + i * h);
   result += f<double>(x1) / 2;
   result += f<double>(x2) / 2;
   result *= h;
   stopTimer(zegar);  
+
   cout << endl << "Wynik calkowania metoda trapezow: " << result << endl << "czas: ";
   printTimer(zegar); 
   cout << endl;
