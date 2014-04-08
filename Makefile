@@ -2,7 +2,7 @@ CC=g++
 SOURCES=numerical_integration.cpp
 OBJECTS=$(SOURCES)
 EXECUTABLE=numerical_integration
-CFLAGS=-Wall -lrt
+CFLAGS=-Wall -lrt 
 
 all: $(SOURCES) $(EXECUTABLE)
 

@@ -27,59 +27,78 @@ double f(T x){
   return expression.value();
 }
 void simpsonRule() {
-  double x1,x2,result,t,h,x;
-  x1 = X1; x2 = X2; 
-  result = 0; t = 0;
+  ofstream outfile("pomiary/simpson.dat", ios::out | ios::app);
+  double x1,x2,result,t,h,x, avgTime;
+  x1 = X1; x2 = X2;
+  t = 0; avgTime = 0;
   pTimer zegar = newTimer(); 
 
   h = (x2 - x1) / N;
   startTimer(zegar); 
-  for(int i = 1; i <= N; i++)
-    {
-      x = x1 + i * h;
-      t += f<double>(x - h / 2);
-      if(i < N)
-        result += f<double>(x);
-    }
-  result = h / 6 * (f<double>(x1) + f<double>(x2) + 2 * result + 4 * t);
-  stopTimer(zegar);  
+  for(int j = 0; j < 5; j++)
+  {
+    result = 0; t = 0;
+    for(int i = 1; i <= N; i++)
+      {
+        x = x1 + i * h;
+        t += f<double>(x - h / 2);
+        if(i < N)
+          result += f<double>(x);
+      }
+    result = h / 6 * (f<double>(x1) + f<double>(x2) + 2 * result + 4 * t);
+    stopTimer(zegar);  
+    avgTime += getTime(zegar);
+  }
   
-  cout << endl << "Wynik calkowania metoda Simpsona: " << result << endl << "czas: ";
-  printTimer(zegar); 
+  outfile << N << ": " << result << " " << avgTime/5 << "\n";
+  outfile.close(); 
   freeTimer(zegar);  
 }
 void rectangleRule() {
-  double x1, x2, h, result;
-  result = 0;
+  ofstream outfile("pomiary/rectangle.dat", ios::out | ios::app);
+  double x1, x2, h, result, avgTime;
+  avgTime = 0;
   x1 = X1; x2 = X2;
   pTimer zegar = newTimer(); 
 
   h = (x2 - x1) / N;
-  startTimer(zegar); 
-  for (int i = 1; i <= N; i++)
-    result += f<double>(x1 + i * h) * h;
-  stopTimer(zegar);  
+  for(int j = 0; j < 5; j++)
+  {
+    result = 0;
+    startTimer(zegar); 
+    for (int i = 1; i <= N; i++)
+      result += f<double>(x1 + i * h) * h;
+    stopTimer(zegar); 
+    avgTime += getTime(zegar);
+  } 
 
-  cout << endl << "Wynik calkowania metoda prostokatow: " << result << endl << "czas: ";
-  printTimer(zegar); 
+  outfile << N << ": " << result << " " << avgTime/5 << "\n";
+  outfile.close();
   freeTimer(zegar); 
 }
 void trapezoidalRule(){
-  double x1, x2, h, result;
-  x1 = X1; x2 = X2; result = 0;
+  ofstream outfile("pomiary/trapez.dat", ios::out | ios::app);
+  double x1, x2, h, result, avgTime;
+  x1 = X1; x2 = X2;
+  avgTime = 0;
   pTimer zegar = newTimer(); 
 
   h = (x2 - x1) / N;
-  startTimer(zegar); 
-  for (int i = 1; i < N; i++)
-    result += f<double>(x1 + i * h);
-  result += f<double>(x1) / 2;
-  result += f<double>(x2) / 2;
-  result *= h;
-  stopTimer(zegar);  
+  for(int j = 0; j < 5; j++)
+  {
+    result = 0;
+    startTimer(zegar); 
+    for (int i = 1; i < N; i++)
+      result += f<double>(x1 + i * h);
+    result += f<double>(x1) / 2;
+    result += f<double>(x2) / 2;
+    result *= h;
+    stopTimer(zegar);  
+    avgTime += getTime(zegar);
+  }
 
-  cout << endl << "Wynik calkowania metoda trapezow: " << result << endl << "czas: ";
-  printTimer(zegar); 
+  outfile << N << ": " << result << " " << avgTime/5 << "\n";
+  outfile.close();
   freeTimer(zegar); 
 }
 void readFile(){
@@ -101,6 +120,8 @@ int main(int argc, char** argv){
     if (!strcmp(argv[i], "-fun")) FUN = argv[++i];
     if (!strcmp(argv[i], "-f")) FILEPATH = argv[++i];
     if (!strcmp(argv[i], "-n")) N = atoi(argv[++i]);
+    if (!strcmp(argv[i], "-x1")) X1 = atoi(argv[++i]);
+    if (!strcmp(argv[i], "-x2")) X2 = atoi(argv[++i]);
     i++;
   }
   if(!FILEPATH.empty())
@@ -110,7 +131,6 @@ int main(int argc, char** argv){
   rectangleRule();
   trapezoidalRule();
   simpsonRule();
-  cout << endl;
 
   return 0;
 }
