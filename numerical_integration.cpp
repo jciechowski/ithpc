@@ -10,6 +10,8 @@ using namespace std;
 string FUN = "";
 string FILEPATH = "";
 int N = 0;
+int X1 = 0;
+int X2 = 0;
 
 template<typename T>
 double f(T x){
@@ -26,7 +28,7 @@ double f(T x){
 }
 void simpsonRule() {
   double x1,x2,result,t,h,x;
-  x1 = 0; x2 = 1; 
+  x1 = X1; x2 = X2; 
   result = 0; t = 0;
   pTimer zegar = newTimer(); 
 
@@ -44,12 +46,12 @@ void simpsonRule() {
   
   cout << endl << "Wynik calkowania metoda Simpsona: " << result << endl << "czas: ";
   printTimer(zegar); 
-  cout << endl;
   freeTimer(zegar);  
 }
 void rectangleRule() {
   double x1, x2, h, result;
-  x1 = 0; x2 = 1; result = 0;
+  result = 0;
+  x1 = X1; x2 = X2;
   pTimer zegar = newTimer(); 
 
   h = (x2 - x1) / N;
@@ -60,12 +62,11 @@ void rectangleRule() {
 
   cout << endl << "Wynik calkowania metoda prostokatow: " << result << endl << "czas: ";
   printTimer(zegar); 
-  cout << endl;
   freeTimer(zegar); 
 }
 void trapezoidalRule(){
   double x1, x2, h, result;
-  x1 = 0; x2 = 1; result = 0;
+  x1 = X1; x2 = X2; result = 0;
   pTimer zegar = newTimer(); 
 
   h = (x2 - x1) / N;
@@ -79,15 +80,17 @@ void trapezoidalRule(){
 
   cout << endl << "Wynik calkowania metoda trapezow: " << result << endl << "czas: ";
   printTimer(zegar); 
-  cout << endl;
   freeTimer(zegar); 
 }
 void readFile(){
   ifstream infile(FILEPATH.c_str());
-  string n;
-  string fun;
+  string n,fun,x1,x2;
+  getline(infile,x1);
+  getline(infile,x2);
   getline(infile,n);
   getline(infile,fun);
+  X1 = atoi(x1.c_str());
+  X2 = atoi(x2.c_str());
   N = atoi(n.c_str());
   FUN = fun;
 }
@@ -107,6 +110,7 @@ int main(int argc, char** argv){
   rectangleRule();
   trapezoidalRule();
   simpsonRule();
+  cout << endl;
 
   return 0;
 }
