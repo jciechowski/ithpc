@@ -1,4 +1,5 @@
 #!/bin/bash
-for i in {1..5}; do
-	numerical_integration -n $i -fun 'cos(x)' -x1 -1 -x2 1
+rm pomiary/*
+for i in {5..500}; do
+	numerical_integration -n $i -fun 'cos(x)' -x1 -1 -x2 1 -p 128
 done

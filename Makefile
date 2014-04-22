@@ -13,6 +13,8 @@ numerical_integration.o: numerical_integration.cpp
 	$(CC) $(CFLAGS) $@
 
 run:	all
+	rm pomiary/*
 	./numerical_integration -f input.dat
+	tail pomiary/*
 clean: 
 	rm -rf *.o numerical_integration
