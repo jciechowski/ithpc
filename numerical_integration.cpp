@@ -86,7 +86,7 @@ void simpsonPar()
     result = ((f(a) + f(b)) / 2 + sumA + 2 * sumB) * h / 3;
     stopTimer(zegar);
     timer = getTime(zegar);
-    outfile << N << "\t" << result << "\t" << timer << "\n";
+    outfile << N << "\t" << P << "\t" << result << "\t" << timer << "\n";
     outfile.close();
     freeTimer(zegar);
 }
@@ -163,7 +163,7 @@ void trapezPar()
 
     stopTimer(zegar);
     double time = getTime(zegar);
-    outfile << N << "\t" << integral << "\t" << time << "\n";
+    outfile << N << "\t" << P << "\t" << integral << "\t" << time << "\n";
     outfile.close();
     freeTimer(zegar);
 }
@@ -190,7 +190,7 @@ void rectanglePar()
 
     stopTimer(zegar);
     double time = getTime(zegar);
-    outfile << N << "\t" << integral << "\t" << time << "\n";
+    outfile << N << "\t" << P << "\t" << integral << "\t" << time << "\n";
     outfile.close();
     freeTimer(zegar);
 }
