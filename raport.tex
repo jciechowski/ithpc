@@ -1,0 +1,80 @@
+\documentclass {report}
+\usepackage[cp1250]{inputenc}
+\usepackage{graphicx}
+\RequirePackage{polyglossia}
+\setdefaultlanguage{polish} 
+
+\def\ymdtoday{\number\year.\number\month.\number\day\relax}
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\begin {document}
+\begin{titlepage}
+\title {Porównanie różnych metod całkowania numerycznego w wersji sekwencyjnej oraz równoległej}
+\author {Jakub Ciechowski, 186471}
+\date {\ymdtoday}
+\maketitle
+\end{titlepage}
+\section {Opis problemu}
+W poniższym raporcie postaram się porównać różne metody całkowania numerycznego, zarówno pod względem dokładności jak i szybkości. W tym celu zaimplementowałem trzy różne metody, zarówno w wersji równoległej jak i sekwencyjnej.
+\subsection {Metody całkowania}
+Według definicji całki oznaczonej Riemana, wartość całki równa jest sumie pól obszarów pod wykresem krzywej w zadanym przedziale. Na tej podstawie wykorzystałem 3 różne metody całkowania.
+\paragraph {Metoda trapezów}
+Polega na podzieleniu obszaru na \textit{n} trapezów, których suma pól pozwala nam poznać przybliżoną wartość całki.
+Wzór pozwalający nam dokonać obliczeń wygląda następująco:
+\newline
+$\int\limits_{a}^{b} f(x)dx \approx h(\frac{y_1}{2} + y_2 +\ldots+ y_n + \frac{y_{n+1}}{2}) = \frac{h}{2} \sum_{n=1}^{k}(f(x_i) + f(x_{i+1}) $
+\footnote{źródło: Wikipedia}
+\paragraph {Metoda prostokątów}
+Podobnie, jak metoda trapezów dzieli obszar na prostokąty a następnie oblicza sumę ich pól wg następującego wzoru:
+\newline
+$\int\limits_{x_*}^{x_*+h} f(x)dx \approx hf(x_* + \frac{h}{2})$
+\footnote{źródło: Wikipedia}
+\paragraph {Metoda Simpsona}
+Wymaga podzielenia przedziału na parzystą liczbę podprzedziałów a następnie wykorzystuje wzór:
+\newline
+$\int\limits_{a}^{b} f(x)dx \approx \frac{h}{3}[f_0 = 4(f_1 + f_3 + \ldots+ f_{2n-1}) + 2(f_2 + f_4 + \.... + f_{2n-2}) + f_2n]$
+\footnote{źródło: Wikipedia}
+\section {Rezultaty}
+\subsection {Implementacja sekwencyjna}
+\includegraphics[height=7cm]{wykresy/blad_sekw.png}
+\newline
+Momentalnie możemy zauważyć dokładność metody Simpsona, która już po 5 iteracji daje błąd parę rzędów wielkości mniejszy od metody trapezów i prostokątów. Można również zauważyć, że metoda prostokątów jest zdecydowanie najmniej precyzyjna. Podział pola pod wykresem na trapezy daje wyniki dokładniejsze niż podział na prostokąty ale i tak znacznie gorsze od metody Simpsona.
+\newline
+\includegraphics[height=7cm]{wykresy/czas_sekw.png}
+\newline
+Jednak znacznie większa precyzja kosztuje również znacznie więcej czasu. Jak widać na wykresie, metoda Simpsona działa znacznie dłużej od metody trapezów i prostokątów, które działają praktycznie w tym samym czasie.
+\subsection {Implementacja wielowątkowa}
+Poniżej widzimy wykres porównujący wszystkie trzy metody w wersji wielowątkowej na procesorze Xeon Phi
+\newline
+\includegraphics[height=7cm]{wykresy/czas_par.png}
+\newline
+Powtarza się sytuacja z wersji sekwencyjnej. Chociaż różnice w czasie działania są znacznie mniejsze to wciąż metoda Simpsona jest najwolniejsza.
+\newline
+Porównanie czasu działania wersji równoległej dla procesora Xeon Phi z użyciem oraz bez użycia akceleratora.
+\newline
+\includegraphics[height=7cm]{wykresy/phi_mic_prostokaty.png}
+\newline
+\includegraphics[height=7cm]{wykresy/phi_mic_Simpson.png}
+\newline
+\includegraphics[height=7cm]{wykresy/phi_mic_trapezy.png}
+\newline
+Najciekawsze rezultaty uzyskujemy dla metody prostokątów, która bez akceleracji działa znacznie szybciej.
+\subsection {Porównanie implementacji sekwencyjnej oraz równoległej}
+Następnym krokiem było porównanie różnych metod w wersji sekwencyjnej oraz wielowątkowej.
+\newline
+\includegraphics[height=7cm]{wykresy/czas_par_sekw_trapezy.png}
+Dla metody trapezów uzyskałem około dziesięciokrotne przyśpieszenie. Pierwsza wersja algorytmu korzystała z sekcji krytycznej, dzięki czemu szybkość wzrosła około dwukrotnie. Zastosowanie redukcji pozwoliło przyśpieszyć jeszcze pięciokrotnie.
+\newline
+\includegraphics[height=7cm]{wykresy/czas_par_sekw_Simpson.png}
+\newline
+\includegraphics[height=7cm]{wykresy/czas_par_sekw_prostokaty.png}
+Dla dwóch pozostałych metod sytuacja wygląda praktycznie tak samo, czego niestety nie oddaje wykres metody prostokątów ponieważ nie jest w skali logarytmicznej.
+\newline
+
+\section {Wnioski}
+Jak widać, najbardziej rzuca się w oczy dokładność metody Simpsona, która daje bardzo dokładne wyniki już praktycznie po kilku iteracjach. Metoda trapezów oraz prostokątów nieznacznie się różniły od siebie ale znacznie odstawały od metody Simpsona.
+\newline
+Jednak, prezycja metody Simpsona ma swoją cenę którą jest czas. W niektórych przypadkach w zupełności wystarczy nam precyzja innych metod, które działają znacznie szybciej.
+\newline
+Jeżeli chodzi o przyśpieszenie to niestety nie udało mi się uzyskać znacznego przyśpieszenia dzięki akceleratorowi. 
+\end {document}
